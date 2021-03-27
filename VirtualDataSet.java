@@ -23,6 +23,11 @@ public class VirtualDataSet extends DataSet {
 	private int[] map;
 
 	/**
+	 * the split condition that induced the dataset
+	 */
+	private String condition;
+
+	/**
 	 * Constructor for VirtualDataSet. There are two important considerations here:
 	 * (1) Make sure that you keep COPIES of the "rows" and "attributes" passed as
 	 * formal parameters. Do not, for example, say this.map = rows. Instead, create
@@ -39,11 +44,14 @@ public class VirtualDataSet extends DataSet {
 	 *                   for these attributes according to the rows. Why? Because
 	 *                   this virtual set is only a subset of the source dataset and
 	 *                   its attributes potentially have fewer unique values.
+	 * @param condition  The split condition (if any) that induced the virtual dataset
 	 */
-	public VirtualDataSet(ActualDataSet source, int[] rows, Attribute[] attributes) {
+	public VirtualDataSet(ActualDataSet source, int[] rows, Attribute[] attributes, String condition) {
 		this.source = source;
 
 		this.numRows = rows.length;
+
+		this.condition = condition;
 
 		this.map = new int[this.numRows];
 
@@ -68,8 +76,18 @@ public class VirtualDataSet extends DataSet {
 	public String toString() {
 		return "Virtual dataset with " + numAttributes + " attribute(s) and " + numRows + " row(s)"
 				+ System.lineSeparator() + " - Dataset is a view over " + source.getSourceId() + System.lineSeparator()
+				+ " - Split condition: " + condition + System.lineSeparator()
 				+ " - Row indices in this dataset (w.r.t. its source dataset): " + Util.intArrayToString(map)
 				+ System.lineSeparator() + super.toString();
+	}
+
+	/**
+	 * Returns the split condition that induced the dataset
+	 * 
+	 * @return the split condition
+	 */
+	public String getCondition() {
+		return condition;
 	}
 
 	/**
@@ -159,12 +177,13 @@ public class VirtualDataSet extends DataSet {
 				rows[z] = partitions.get(i).get(z);
 			}
 
-			datasets[i] = new VirtualDataSet(source, rows, reducedAttributes);
+			datasets[i] = new VirtualDataSet(source, rows, reducedAttributes, attributes[attributeIndex].getName()
+					+ " is \'" + source.getValueAt(partitions.get(i).get(0), attribute.getAbsoluteIndex()) +"\'");
 		}
 
 		return datasets;
 	}
-	
+
 	/**
 	 * This method splits the virtual dataset over a given numeric attribute at a
 	 * specific value from the value set of that attribute. This process has been
@@ -221,7 +240,7 @@ public class VirtualDataSet extends DataSet {
 			}
 		}
 
-		// now We have the partitions; build the DataSets
+		// Now we have the partitions; build the DataSets
 		// No attributes will be dropped in numeric partitioning
 		VirtualDataSet[] datasets = new VirtualDataSet[partitions.size()];
 
@@ -231,8 +250,11 @@ public class VirtualDataSet extends DataSet {
 				rows[z] = partitions.get(i).get(z);
 			}
 
-			datasets[i] = new VirtualDataSet(source, rows, attributes);
+			datasets[i] = new VirtualDataSet(source, rows, attributes,
+					(i == 0) ? attribute.getName() + " <= " + values[valueIndex]
+							: attribute.getName() + " > " + values[valueIndex]);
 		}
+
 		return datasets;
 	}
 
@@ -244,7 +266,8 @@ public class VirtualDataSet extends DataSet {
 		System.out.println("THE WEATHER-NOMINAL DATASET:");
 		System.out.println();
 
-		ActualDataSet figure5Actual = new ActualDataSet(new CSVReader("weather-nominal.csv"));
+		ActualDataSet figure5Actual = new ActualDataSet(new CSVReader(
+				"/Users/mehrdad/Dropbox/ITI1121/2021/assignments/A2/a2_3000000_3000001/datasets/weather-nominal.csv"));
 
 		System.out.println(figure5Actual);
 
@@ -260,17 +283,15 @@ public class VirtualDataSet extends DataSet {
 			System.out.println("Partition " + i + ": " + figure5Partitions[i]);
 
 		/////// NOW SPLIT A PARTITION!
-		
+
 		System.out.println("Now, let\'s split Partition 0 from above over humidity:");
 		System.out.println();
-
 
 		VirtualDataSet[] nextLevel = figure5Partitions[0]
 				.partitionByNominallAttribute(figure5Partitions[0].getAttributeIndex("humidity"));
 
 		for (int i = 0; i < nextLevel.length; i++)
 			System.out.println("Partition " + i + ": " + nextLevel[i]);
-
 
 		System.out.println("And last, let\'s split Partition 0 from above over windy:");
 		System.out.println();
@@ -287,7 +308,8 @@ public class VirtualDataSet extends DataSet {
 		System.out.println("THE WEATHER-NUMERIC DATASET:");
 		System.out.println();
 
-		ActualDataSet figure9Actual = new ActualDataSet(new CSVReader("weather-numeric.csv"));
+		ActualDataSet figure9Actual = new ActualDataSet(new CSVReader(
+				"/Users/mehrdad/Dropbox/ITI1121/2021/assignments/A2/a2_3000000_3000001/datasets/weather-numeric.csv"));
 
 		System.out.println(figure9Actual);
 
@@ -325,7 +347,7 @@ public class VirtualDataSet extends DataSet {
 			System.out.println("Partition " + i + ": " + figure9Partitions[i]);
 
 		/////// NOW SPLIT A PARTITION!
-		
+
 		System.out.println("Now let\'s split Partition 0 from above over windy:");
 		System.out.println();
 

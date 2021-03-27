@@ -83,7 +83,7 @@ public class ActualDataSet extends DataSet {
 			rows[i] = i;
 		}
 
-		return new VirtualDataSet(this, rows, attributes);
+		return new VirtualDataSet(this, rows, attributes, "");
 	}
 
 	/**
