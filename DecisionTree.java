@@ -36,6 +36,47 @@ public class DecisionTree {
 	@SuppressWarnings("unchecked")
 	private void build(Node<VirtualDataSet> node) {
 		// WRITE YOUR CODE HERE!
+
+		// EDGE CASES ??
+		if (node == null || node.data == null){
+			throw new NullPointerException("NullPointerException");
+		}
+
+		if (node.data.getNumberOfAttributes() < 1){
+			throw new IllegalStateException("The node has less than one attribute");
+		}
+
+		if (node.data.getNumberOfDatapoints() < 1){
+			throw new IllegalStateException("The node has less than one datapoint");
+		}
+
+		// BASE CASES 
+		if (node.data.getNumberOfAttributes() == 1 && node.data.getAttribute(0).equals(node.data.getSourceDataSet().attributes[-1])) {
+
+		}else if(node.data.getUniqueAttributeValues(0).length == 1){
+
+		}
+		
+
+
+		// RECURSIVE CASE
+		GainInfoItem[] gains = InformationGainCalculator.calculateAndSortInformationGains(node.data);
+
+		Attribute a_max; 
+		String maxName;
+		double maxGainValue = gains[0].getGainValue();
+
+		for (int i = 0; i < gains.length; i++){
+			if (gains[i].getGainValue() > maxGainValue) {
+				maxGainValue = gains[i].getGainValue();
+				maxName = gains[i].getAttributeName();
+			}
+		}
+
+		for(int i = 0; i < node.data.getNumberOfAttributes(); i++){
+			if (node.data.attributes
+		}
+
 	}
 
 	@Override
