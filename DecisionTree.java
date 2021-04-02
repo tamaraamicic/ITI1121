@@ -57,31 +57,43 @@ public class DecisionTree {
 
 		}
 		
-
-
 		// RECURSIVE CASE
+
+		// 3.1
 		GainInfoItem[] gains = InformationGainCalculator.calculateAndSortInformationGains(node.data);
 
-		Attribute a_max; 
-		String maxName;
+		Attribute a_max = node.data.getAttribute(0); 
 		double maxGainValue = gains[0].getGainValue();
+		String splitString = gains[0].getSplitAt();
 
-		for (int i = 0; i < gains.length; i++){
+		for (int i = 1; i < gains.length; i++){
 			if (gains[i].getGainValue() > maxGainValue) {
 				maxGainValue = gains[i].getGainValue();
-				maxName = gains[i].getAttributeName();
+				a_max = node.data.getAttribute(gains[i].getAttributeName());
+				splitString = gains[i].getSplitAt();
 			}
 		}
 
-		for(int i = 0; i < node.data.getNumberOfAttributes(); i++){
-			if (node.data.attributes
-		}
+		//3.2
+
+		int split = Integer.parseInt(splitString);
+
+		if (a_max.getType() == AttributeType.NOMINAL){
+			VirtualDataSet[] partitions = node.data.partitionByNominallAttribute(a_max.getAbsoluteIndex());
+		}else{
+			VirtualDataSet[] partitions = node.data.partitionByNumericAttribute(a_max.getAbsoluteIndex(), split);
+		}	
+
+		//3.3
+
+
 
 	}
 
 	@Override
 	public String toString() {
 		return toString(root, 0);
+		// fun 
 	}
 
 	/**
