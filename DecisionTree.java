@@ -36,6 +36,8 @@ public class DecisionTree {
 	@SuppressWarnings("unchecked")
 	private void build(Node<VirtualDataSet> node) {
 		// WRITE YOUR CODE HERE!
+		System.out.println();
+		System.out.println("Method call");
 
 		// EDGE CASES ??
 		if (node == null || node.data == null){
@@ -52,15 +54,22 @@ public class DecisionTree {
 
 		// BASE CASES 
 
+		System.out.println("INDEX OF CLASS: " + (node.data.getSourceDataSet().attributes.length-1));
 		//2.1
-		if (node.data.getNumberOfAttributes() == 1 && node.data.getAttribute(0).equals(node.data.getSourceDataSet().attributes[-1])) {
-			//????
+		if (node.data.getNumberOfAttributes() == 1 && node.data.getAttribute(0).equals
+			(node.data.getSourceDataSet().attributes[node.data.getSourceDataSet().attributes.length-1])) {
+			System.out.println("base case 1");
+			return;
+
 		//2.2
-		} else if(node.data.getUniqueAttributeValues(0).length == 1){
-			//return node.data.getUniqueAttributeValues(0)[0];
+		} else if(node.data.getUniqueAttributeValues(node.data.attributes.length-1).length == 1){
+			System.out.println("base case 2");
+			return;
+
 		//2.3
 		} else if (noAttributeHasMoreThanOneUniqueValue(node.data)) {
-			//return something NO
+			System.out.println("base case 3");
+			return;
 		}
 		
 		// RECURSIVE CASE
@@ -68,30 +77,53 @@ public class DecisionTree {
 		// 3.1
 		GainInfoItem[] gains = InformationGainCalculator.calculateAndSortInformationGains(node.data);
 
-		Attribute a_max = node.data.getAttribute(0); 
-		double maxGainValue = gains[0].getGainValue();
+		Attribute a_max = node.data.getAttribute(gains[0].getAttributeName()); 
 		String splitString = gains[0].getSplitAt();
+		
+		// for (int i = 0; i < node.data.getNumberOfAttributes(); i++) {
+		// 	System.out.println("attributes: " + node.data.getAttribute(i));
 
-		for (int i = 1; i < gains.length; i++){
-			if (gains[i].getGainValue() > maxGainValue) {
-				maxGainValue = gains[i].getGainValue();
-				a_max = node.data.getAttribute(gains[i].getAttributeName());
-				splitString = gains[i].getSplitAt();
-			}
-		}
+		// } 
+		// System.out.println();
+
+		// double maxGainValue = gains[0].getGainValue();
+	
+		// for (int i = 0; i < gains.length; i++){
+		// 	//System.out.println("mango");
+		// 	System.out.println("gain: " + gains[i] + " gain value: " + gains[i].getGainValue());
+		// 	System.out.println("maxGainValue: " + maxGainValue);
+		// 	if (gains[i].getGainValue() > maxGainValue) {
+		// 		System.out.println("apple");
+		// 		maxGainValue = gains[i].getGainValue();
+		// 		System.out.println("gains[i].getAttributeName(): " +  gains[i].getAttributeName());
+		// 		a_max = node.data.getAttribute(gains[i].getAttributeName());
+		// 		splitString = gains[i].getSplitAt();
+		// 	}
+		// }
+
+		System.out.println("a_max: " + a_max.getName());
+		// System.out.println();
 
 		//3.2
 		
 		VirtualDataSet[] partitions;
 
 		if (a_max.getType() == AttributeType.NOMINAL){
+			//System.out.println("a_max: " + a_max.getName());
 			partitions = node.data.partitionByNominallAttribute(a_max.getAbsoluteIndex());
 		}else{
 			int split = Integer.parseInt(splitString);
+			//System.out.println("split: " + split);
+
+			//System.out.println("a_max: " + a_max.getName());
+			//System.out.println("a_max.getAbsoluteIndex(): " + a_max.getAbsoluteIndex());
 			partitions = node.data.partitionByNumericAttribute(a_max.getAbsoluteIndex(), split);
+		
 		}	
 
 		//3.3
+
+		//System.out.println("partitions.length: " + partitions.length);
 		node.children = (Node<VirtualDataSet>[]) new Node[partitions.length];
 
 		//3.4 and 3.5
@@ -103,7 +135,7 @@ public class DecisionTree {
 	}
 
 	private boolean noAttributeHasMoreThanOneUniqueValue(VirtualDataSet data) {
-		for (int i = 0; i < data.getNumberOfAttributes() - 1; i++) {
+		for (int i = 0; i < data.getNumberOfAttributes()-1; i++) {
 			if (data.getUniqueAttributeValues(i).length > 1) {
 				return false;
 			}
@@ -127,12 +159,14 @@ public class DecisionTree {
 	 */
 	private String toString(Node<VirtualDataSet> node, int indentDepth) {
 		// WRITE YOUR CODE HERE!
-		String output = "if (" + node.data + ") is \'" + node.children[0] + "\') {" + createIndent(indentDepth) 
-		+ "\n"+ toString(node.children[0], indentDepth + 1) + "\n"+ createIndent(indentDepth) + "class = " + 
-		node.data.getUniqueAttributeValues(0)[0] + "}";
+		//build(node);
+
+		// String output = "if (" + node.data.getAttribute(0) + ") is \'" + node.children[0] + "\') {" + createIndent(indentDepth) 
+		// + "\n"+ toString(node.children[0], indentDepth + 1) + "\n"+ createIndent(indentDepth) + "class = " + 
+		// node.data.getUniqueAttributeValues(0)[0] + "}";
 		
 		// Remove the following line once you have implemented the method
-		return output;
+		return "banana";
 	}
 
 	/**
