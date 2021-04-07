@@ -14,6 +14,11 @@ public class InformationGainCalculator {
 	 *         value
 	 */
 	public static GainInfoItem[] calculateAndSortInformationGains(VirtualDataSet dataset) {
+
+		if (dataset == null){
+			throw new NullPointerException("dataset is null");
+		}
+
 		int n = dataset.getNumberOfAttributes() - 1; // Minus 1 because we assume the last attribute is the class (to
 														// predict)
 

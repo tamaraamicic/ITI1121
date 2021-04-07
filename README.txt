@@ -1,4 +1,4 @@
-Date: Sunday March 22, 2021
+Date: Friday April 9th, 2021
 
 Student Name: Oleksander Turchyn                         
 Student Number: 300174825                                
@@ -12,4 +12,7 @@ Section: C
 
 Assignment #4 for ITI 1121 Winter 2021. 
 
-Contains: 
+Contains: DecisionTree.java, EntropyEvaluator.java, GainInfoItem.java, InformationGainCalculator.java,  
+DataSet.java, Util.java, StudentInfo.java, ActualDataSet.java, 
+AttributeType.java, DataReader.java, CSVReader.java, Attribute.java, 
+VirtualDataSet.java, and this (README.txt).

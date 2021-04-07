@@ -24,6 +24,11 @@ public class DecisionTree {
 	 *             decision tree is to be built
 	 */
 	public DecisionTree(ActualDataSet data) {
+
+		if (data == null){
+			throw new NullPointerException("The dataset is null");
+		}
+
 		root = new Node<VirtualDataSet>(data.toVirtual());
 		build(root);
 	}
@@ -39,9 +44,9 @@ public class DecisionTree {
 		//System.out.println();
 		//System.out.println("-----METHOD CALL-----");
 
-		// EDGE CASES ??
+		// EDGE CASES
 		if (node == null || node.data == null){
-			throw new NullPointerException("NullPointerException");
+			throw new NullPointerException("node or node.data are null");
 		}
 
 		if (node.data.getNumberOfAttributes() < 1){
@@ -99,7 +104,6 @@ public class DecisionTree {
 			}
 			
 			partitions = node.data.partitionByNumericAttribute(node.data.getAttributeIndex(a_max.getName()), splitIndex);
-			 
 		}	
 
 		//3.3
@@ -114,6 +118,7 @@ public class DecisionTree {
 	}
 
 	private boolean noAttributeHasMoreThanOneUniqueValue(VirtualDataSet data) {
+
 		for (int i = 0; i < data.getNumberOfAttributes()-1; i++) {
 			if (data.getUniqueAttributeValues(i).length > 1) {
 				return false;
@@ -139,10 +144,21 @@ public class DecisionTree {
 	private String toString(Node<VirtualDataSet> node, int indentDepth) {
 		// WRITE YOUR CODE HERE!
 
-		StringBuffer buffer = new StringBuffer();
+		// edge Cases
+	
+		if (node == null || node.data == null){
+			throw new NullPointerException("node or node.data are null");
+		}
 
-		//base cases
-		
+		if (node.data.getNumberOfAttributes() < 1){
+			throw new IllegalStateException("The node has less than one attribute");
+		}
+
+		if (node.data.getNumberOfDatapoints() < 1){
+			throw new IllegalStateException("The node has less than one datapoint");
+		}
+
+		//base cases		
 		if (node.data.getNumberOfAttributes() == 1 && node.data.getAttribute(0).equals
 			(node.data.getSourceDataSet().attributes[node.data.getSourceDataSet().attributes.length-1])) {
 			return (createIndent(indentDepth) + node.data.getAttribute(node.data.attributes.length-1).getName() + " = " + node.data.getUniqueAttributeValues((node.data.attributes.length-1))[0] + "\n");
@@ -156,7 +172,10 @@ public class DecisionTree {
 			return (createIndent(indentDepth) + node.data.getAttribute(node.data.attributes.length-1).getName() + " = " + node.data.getUniqueAttributeValues((node.data.attributes.length-1))[0]+ "\n");
 		}
 
+
 		//recursive case
+
+		StringBuffer buffer = new StringBuffer();
 
 		for (int i = 0; i < node.children.length; i++) {
 			if (i == 0) {
@@ -179,6 +198,7 @@ public class DecisionTree {
 	 *         method
 	 */
 	private static String createIndent(int indentDepth) {
+
 		if (indentDepth <= 0) {
 			return "";
 		}
@@ -193,35 +213,57 @@ public class DecisionTree {
 	
 		StudentInfo.display();
 
-		// if (args == null || args.length == 0) {
-		// 	System.out.println("Expected a file name as argument!");
-		// 	System.out.println("Usage: java DecisionTree <file name>");
-		// 	return;
-		// }
+		if (args == null || args.length == 0) {
+			System.out.println("Expected a file name as argument!");
+			System.out.println("Usage: java DecisionTree <file name>");
+			return;
+		}
 
-		// String strFilename = args[0];
+		String strFilename = args[0];
 
-		// ActualDataSet data = new ActualDataSet(new CSVReader(strFilename));
+		ActualDataSet data = new ActualDataSet(new CSVReader(strFilename));
 
-		// DecisionTree dtree = new DecisionTree(data);
+		DecisionTree dtree = new DecisionTree(data);
 
-		// System.out.println(dtree);
+		System.out.println(dtree);
 
-		ActualDataSet data1 = new ActualDataSet(new CSVReader("weather-nominal.csv"));
-		DecisionTree dtree1 = new DecisionTree(data1);
 
-		System.out.println("*** Decision tree for weather-nominal.csv ***");
-		System.out.println();
+		// System.out.println("*** Decision tree for weather-nominal.csv ***");
+		// System.out.println();
 
-		System.out.println(dtree1);
+		// ActualDataSet data1 = new ActualDataSet(new CSVReader("weather-nominal.csv"));
+		// DecisionTree dtree1 = new DecisionTree(data1);
 
-		System.out.println("*** Decision tree for weather-numeric.csv ***");
-		System.out.println();
+		// System.out.println(dtree1);
 
-		ActualDataSet data2 = new ActualDataSet(new CSVReader("weather-numeric.csv"));
-		DecisionTree dtree2 = new DecisionTree(data2);
 
-		System.out.println(dtree2);
+
+		// System.out.println("*** Decision tree for weather-numeric.csv ***");
+		// System.out.println();
+
+		// ActualDataSet data2 = new ActualDataSet(new CSVReader("weather-numeric.csv"));
+		// DecisionTree dtree2 = new DecisionTree(data2);
+
+		// System.out.println(dtree2);
+
+
+
+		// System.out.println("*** Decision tree for diabetes.csv ***");
+		// System.out.println();
+
+		// ActualDataSet data3 = new ActualDataSet(new CSVReader("diabetes.csv"));
+		// DecisionTree dtree3 = new DecisionTree(data3);
+
+		// System.out.println(dtree3);
+
+
+		// System.out.println("*** Decision tree for credit-info.csv ***");
+		// System.out.println();
+
+		// ActualDataSet data4 = new ActualDataSet(new CSVReader("credit-info.csv"));
+		// DecisionTree dtree4 = new DecisionTree(data4);
+
+		// System.out.println(dtree4);
 
 	}
 }
