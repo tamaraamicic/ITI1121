@@ -16,15 +16,14 @@ public class InformationGainCalculator {
 	public static GainInfoItem[] calculateAndSortInformationGains(VirtualDataSet dataset) {
 
 		if (dataset == null){
-			throw new NullPointerException("dataset is null");
+			throw new NullPointerException("Cannot calculate and sort because VirtualDataSet is null");
 		}
 
 		int n = dataset.getNumberOfAttributes() - 1; // Minus 1 because we assume the last attribute is the class (to
 														// predict)
 
 		if (n <= 0) {
-			System.out.println("No attributes to split on!");
-			return null;
+			throw new IllegalArgumentException("Cannot calculate and sort because the number of attributes is insufficient");
 		}
 
 		GainInfoItem[] items = new GainInfoItem[n];

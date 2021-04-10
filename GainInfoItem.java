@@ -98,7 +98,7 @@ public class GainInfoItem {
 	public static void reverseSort(GainInfoItem[] items) {
 
 		if (items == null)
-			return;
+			throw new NullPointerException("Cannot sort because array is null");
 
 		for (int i = 0; i < items.length - 1; i++) {
 			int indexMin = i;

@@ -20,8 +20,13 @@ public class EntropyEvaluator {
 	 */
 	public static double evaluate(DataSet[] partitions) {
 
-		if (partitions == null || partitions.length == 0)
-			return -1;
+		if (partitions == null ){
+			throw new NullPointerException("Cannot evaluate because array is null");
+		}
+
+		if (partitions.length == 0){
+			throw new IllegalArgumentException("Cannot evaluate because length of partitions is zero");
+		}
 
 		// All partitions will have the same attributes, so we simply take the first:
 		DataSet p = partitions[0];

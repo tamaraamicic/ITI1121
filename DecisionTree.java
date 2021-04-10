@@ -41,38 +41,33 @@ public class DecisionTree {
 	@SuppressWarnings("unchecked")
 	private void build(Node<VirtualDataSet> node) {
 		// WRITE YOUR CODE HERE!
-		//System.out.println();
-		//System.out.println("-----METHOD CALL-----");
-
+	
 		// EDGE CASES
 		if (node == null || node.data == null){
 			throw new NullPointerException("node or node.data are null");
 		}
 
 		if (node.data.getNumberOfAttributes() < 1){
-			throw new IllegalStateException("The node has less than one attribute");
+			throw new IllegalArgumentException("The node has less than one attribute");
 		}
 
 		if (node.data.getNumberOfDatapoints() < 1){
-			throw new IllegalStateException("The node has less than one datapoint");
+			throw new IllegalArgumentException("The node has less than one datapoint");
 		}
 
 		// BASE CASES 
-		//System.out.println("node.data: " + node.data);
+		
 		//2.1
 		if (node.data.getNumberOfAttributes() == 1 && node.data.getAttribute(0).equals
 			(node.data.getSourceDataSet().attributes[node.data.getSourceDataSet().attributes.length-1])) {
-			//System.out.println("base case 1");
 			return;
 
 		//2.2
 		} else if(node.data.getUniqueAttributeValues(node.data.attributes.length-1).length == 1){
-			//System.out.println("base case 2");
 			return;
 
 		//2.3
 		} else if (noAttributeHasMoreThanOneUniqueValue(node.data)) {
-			//System.out.println("base case 3");
 			return;
 		}
 		
@@ -84,10 +79,7 @@ public class DecisionTree {
 		Attribute a_max = node.data.getAttribute(gains[0].getAttributeName()); 
 		String splitString = gains[0].getSplitAt();
 
-		// System.out.println("splitString: " + splitString);
-
-		// System.out.println("a_max: " + a_max.getName());
-		
+	
 		
 		//3.2
 		VirtualDataSet[] partitions;
@@ -95,7 +87,6 @@ public class DecisionTree {
 		if (a_max.getType() == AttributeType.NOMINAL){
 			partitions = node.data.partitionByNominallAttribute(node.data.getAttributeIndex(a_max.getName()));
 		}else{
-			//?????????????????
 			int splitIndex = 0;
 			for (int i = 0; i < node.data.getUniqueAttributeValues(a_max.getName()).length; i++){
 				if(node.data.getUniqueAttributeValues(a_max.getName())[i].equals(splitString)) {
@@ -227,43 +218,6 @@ public class DecisionTree {
 
 		System.out.println(dtree);
 
-
-		// System.out.println("*** Decision tree for weather-nominal.csv ***");
-		// System.out.println();
-
-		// ActualDataSet data1 = new ActualDataSet(new CSVReader("weather-nominal.csv"));
-		// DecisionTree dtree1 = new DecisionTree(data1);
-
-		// System.out.println(dtree1);
-
-
-
-		// System.out.println("*** Decision tree for weather-numeric.csv ***");
-		// System.out.println();
-
-		// ActualDataSet data2 = new ActualDataSet(new CSVReader("weather-numeric.csv"));
-		// DecisionTree dtree2 = new DecisionTree(data2);
-
-		// System.out.println(dtree2);
-
-
-
-		// System.out.println("*** Decision tree for diabetes.csv ***");
-		// System.out.println();
-
-		// ActualDataSet data3 = new ActualDataSet(new CSVReader("diabetes.csv"));
-		// DecisionTree dtree3 = new DecisionTree(data3);
-
-		// System.out.println(dtree3);
-
-
-		// System.out.println("*** Decision tree for credit-info.csv ***");
-		// System.out.println();
-
-		// ActualDataSet data4 = new ActualDataSet(new CSVReader("credit-info.csv"));
-		// DecisionTree dtree4 = new DecisionTree(data4);
-
-		// System.out.println(dtree4);
 
 	}
 }
